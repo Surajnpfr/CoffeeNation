@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import crypto from 'crypto';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -49,22 +50,24 @@ export async function POST(request: NextRequest) {
       [user.id, token, expiresAt]
     );
 
-    // In production, send email here
-    // For now, we'll return the reset link (remove this in production!)
     const resetUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`;
 
-    // TODO: Send email with reset link
-    // For development, log the link
-    console.log('Password reset link for', email, ':', resetUrl);
+    // Send password reset email
+    const emailSent = await sendPasswordResetEmail(user.email, user.name, resetUrl);
 
-    return NextResponse.json(
-      { 
-        message: 'If an account exists with this email, a password reset link has been sent.',
-        // Remove this in production - only for development
-        ...(process.env.NODE_ENV === 'development' && { resetUrl })
-      },
-      { status: 200 }
-    );
+    // In development, also return the reset URL for testing
+    const response: any = {
+      message: 'If an account exists with this email, a password reset link has been sent.',
+    };
+
+    if (process.env.NODE_ENV === 'development') {
+      response.resetUrl = resetUrl;
+      if (!emailSent) {
+        response.emailNote = 'Email service not configured. Using development mode.';
+      }
+    }
+
+    return NextResponse.json(response, { status: 200 });
   } catch (error: any) {
     console.error('Forgot password error:', error);
     return NextResponse.json(
