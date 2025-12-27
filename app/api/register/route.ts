@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import pool from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -50,8 +52,24 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: any) {
     console.error('Registration error:', error);
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to create user';
+    if (error.code === 'ER_NO_SUCH_TABLE') {
+      errorMessage = 'Database tables not initialized. Please run: npm run db:init';
+    } else if (error.code === 'ER_DUP_ENTRY') {
+      errorMessage = 'User with this email already exists';
+    } else if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
+      errorMessage = 'Database connection failed. Please check DATABASE_URL';
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to create user', details: error.message },
+      { 
+        error: errorMessage, 
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+      },
       { status: 500 }
     );
   }
