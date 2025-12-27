@@ -69,7 +69,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <Link
-              href="/products"
+              href="/coffee-info"
               className="flex flex-col gap-3 group cursor-pointer"
             >
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 relative shadow-sm transition-transform group-hover:-translate-y-1">
@@ -91,7 +91,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href="/products"
+              href="/coffee-info"
               className="flex flex-col gap-3 group cursor-pointer"
             >
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 relative shadow-sm transition-transform group-hover:-translate-y-1">
@@ -113,7 +113,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href="/products"
+              href="/coffee-info"
               className="flex flex-col gap-3 group cursor-pointer"
             >
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 relative shadow-sm transition-transform group-hover:-translate-y-1">
@@ -135,7 +135,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              href="/products"
+              href="/coffee-info"
               className="flex flex-col gap-3 group cursor-pointer"
             >
               <div className="w-full aspect-[16/10] rounded-xl overflow-hidden bg-gray-100 relative shadow-sm transition-transform group-hover:-translate-y-1">
@@ -208,10 +208,10 @@ export default function Home() {
               <Link href="/contact" className="hover:text-primary">
                 Contact
               </Link>
-              <Link href="#" className="hover:text-primary">
+              <Link href="/privacy" className="hover:text-primary">
                 Privacy Policy
               </Link>
-              <Link href="#" className="hover:text-primary">
+              <Link href="/terms" className="hover:text-primary">
                 Terms of Service
               </Link>
             </div>

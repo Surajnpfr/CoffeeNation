@@ -369,13 +369,13 @@ export default function ContactPage() {
           </p>
           <div className="flex gap-6">
             <Link
-              href="#"
+              href="/privacy"
               className="text-[#618961] dark:text-[#8baeb8] hover:text-primary text-sm"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href="/terms"
               className="text-[#618961] dark:text-[#8baeb8] hover:text-primary text-sm"
             >
               Terms of Service

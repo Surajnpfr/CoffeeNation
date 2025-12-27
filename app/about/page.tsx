@@ -386,10 +386,10 @@ export default function AboutPage() {
           <div className="flex flex-col md:flex-row justify-between items-center w-full pt-10 mt-6 border-t border-white/10 text-xs text-gray-500">
             <p>© 2024 Nepal Coffee Collective. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <Link href="#" className="hover:text-white">
+              <Link href="/privacy" className="hover:text-white">
                 Privacy Policy
               </Link>
-              <Link href="#" className="hover:text-white">
+              <Link href="/terms" className="hover:text-white">
                 Terms of Service
               </Link>
             </div>
