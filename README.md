@@ -31,11 +31,30 @@ Coffee Nation is an online marketplace designed to bridge the gap between coffee
 - **Database:** MySQL
 - **Deployment:** Heroku
 
-## 📚 Documentation
+## 🚀 Getting Started
 
-For detailed setup and deployment instructions, see:
-- [Heroku Deployment Guide](./HEROKU_DEPLOYMENT_GUIDE.md)
-- [Quick Start Guide](./HEROKU_QUICK_START.md)
+### Prerequisites
+
+- Node.js 18+ and npm 9+
+- MySQL database (or use Heroku's JawsDB MySQL addon)
+- Heroku account (for deployment)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Initialize database: `npm run db:init`
+5. Run development server: `npm run dev`
+
+### Deployment
+
+Deploy to Heroku:
+1. Create a Heroku app
+2. Add JawsDB MySQL addon
+3. Set environment variables
+4. Push to Heroku: `git push heroku main`
+5. Initialize database: `heroku run npm run db:init`
 
 ---
 
