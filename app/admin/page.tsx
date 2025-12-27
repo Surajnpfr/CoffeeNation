@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Notice, Order } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();

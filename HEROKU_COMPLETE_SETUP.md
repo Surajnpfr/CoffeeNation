@@ -80,9 +80,11 @@ After setting environment variables, create the database tables:
 ### Via Heroku Dashboard:
 
 1. Go to **"More"** (top right) → **"Run console"**
-2. Type: `npm run db:init`
-3. Click **"Run"**
-4. Wait for it to complete
+2. You'll see a prompt (might say `heroku run` or `$`)
+3. **Type only:** `npm run db:init` (don't type "heroku run" - just the command)
+4. Press **Enter**
+5. Wait for it to complete
+6. You should see: `✓ Database schema initialized successfully`
 
 ### Via Heroku CLI (if you have it):
 

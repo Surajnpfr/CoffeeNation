@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
