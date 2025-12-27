@@ -10,21 +10,70 @@
 const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+
+// Load dotenv only if available (for local development)
+try {
+  require('dotenv').config();
+} catch (e) {
+  // dotenv not available (production/Heroku) - env vars are already set
+}
+
+// Parse DATABASE_URL if provided (Heroku format)
+function getDbConfig() {
+  if (process.env.DATABASE_URL) {
+    // Parse MySQL connection string: mysql://user:password@host:port/database
+    const url = new URL(process.env.DATABASE_URL);
+    return {
+      host: url.hostname,
+      user: url.username,
+      password: url.password,
+      database: url.pathname.slice(1), // Remove leading '/'
+      port: parseInt(url.port || '3306'),
+    };
+  }
+
+  return {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'coffee_nation',
+    port: parseInt(process.env.DB_PORT || '3306'),
+  };
+}
 
 async function initDatabase() {
   let connection;
 
   try {
-    // Connect to MySQL (without database first)
-    connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || '',
-      port: parseInt(process.env.DB_PORT || '3306'),
-    });
+    const dbConfig = getDbConfig();
+    const dbName = dbConfig.database;
 
-    const dbName = process.env.DB_NAME || 'coffee_nation';
+    // Connect to MySQL (without database first, or with database if DATABASE_URL is used)
+    if (process.env.DATABASE_URL) {
+      // If DATABASE_URL is set, connect directly to the database
+      connection = await mysql.createConnection({
+        host: dbConfig.host,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        database: dbName,
+        port: dbConfig.port,
+      });
+    } else {
+      // Otherwise, connect without database first, then create it
+      connection = await mysql.createConnection({
+        host: dbConfig.host,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        port: dbConfig.port,
+      });
+
+      // Create database if it doesn't exist
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
+      console.log(`✓ Database '${dbName}' created or already exists`);
+
+      // Use the database
+      await connection.query(`USE \`${dbName}\``);
+    }
 
     // Create database if it doesn't exist
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
