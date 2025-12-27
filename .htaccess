@@ -1,0 +1,46 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# IMPORTANT: For Hostinger Node.js Applications
+# If you're using Hostinger's Node.js Application Manager in hPanel,
+# you may not need the proxy rules below. The Node.js manager handles routing automatically.
+# Only use these if you're manually configuring Apache to proxy to Node.js.
+
+# Proxy to Node.js server (uncomment if needed)
+# Replace PORT_NUMBER with the port assigned by Hostinger Node.js manager
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^(.*)$ http://localhost:PORT_NUMBER/$1 [P,L]
+
+# Alternative: If Node.js app is on a different port, use this:
+# RewriteCond %{REQUEST_URI} !^/\.well-known
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^(.*)$ http://localhost:PORT_NUMBER/$1 [P,L]
+
+# Security Headers
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Prevent access to sensitive files
+<FilesMatch "^(\.env|\.git|package-lock\.json|\.env\.local)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Allow access to public files
+<IfModule mod_rewrite.c>
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^(.*)$ - [L]
+</IfModule>
+
+# Custom Error Pages (optional)
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html
+
