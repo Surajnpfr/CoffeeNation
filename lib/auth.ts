@@ -3,21 +3,20 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import pool from './db';
 
-// Validate and clean NEXTAUTH_URL
-function getNextAuthUrl(): string | undefined {
-  const url = process.env.NEXTAUTH_URL;
-  if (!url) return undefined;
-  
+// Clean NEXTAUTH_URL at module load time (before NextAuth reads it)
+if (process.env.NEXTAUTH_URL) {
+  const original = process.env.NEXTAUTH_URL;
   // Remove any spaces and trim
-  const cleaned = url.trim().replace(/\s+/g, '');
+  const cleaned = original.trim().replace(/\s+/g, '');
   
-  // Validate URL format
+  // Validate and set cleaned URL
   try {
     new URL(cleaned);
-    return cleaned;
-  } catch {
-    console.warn(`Invalid NEXTAUTH_URL: ${url}. Using fallback.`);
-    return undefined;
+    process.env.NEXTAUTH_URL = cleaned;
+  } catch (error) {
+    // If invalid, remove it so NextAuth can determine it automatically
+    console.warn(`Invalid NEXTAUTH_URL: "${original}". Removing it. NextAuth will determine URL automatically.`);
+    delete process.env.NEXTAUTH_URL;
   }
 }
 
@@ -90,7 +89,5 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  // Use validated URL or let NextAuth determine it
-  ...(getNextAuthUrl() && { url: getNextAuthUrl() }),
 };
 
